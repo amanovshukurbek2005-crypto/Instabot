@@ -14,7 +14,7 @@ def is_instagram_url(url):
     return bool(re.match(pattern, url))
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👋 Salom! Instagram reel/post havolasini yuboring, yuklab beraman!")
+    await update.message.reply_text("👋 Salom! Instagram reel/post havolasini yuboring!")
 
 async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = update.message.text.strip()
@@ -31,12 +31,13 @@ async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_video(video=f)
         await msg.delete()
     except Exception as e:
-        await msg.edit_text("❌ Yuklab bo'lmadi. Akkaunt yopiq bo'lishi mumkin.")
+        await msg.edit_text("❌ Yuklab bo'lmadi.")
     finally:
         if os.path.exists(output_path):
             os.remove(output_path)
 
-app = ApplicationBuilder().token(BOT_TOKEN).build()
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, download_video))
-app.run_polling()
+if __name__ == "__main__":
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, download_video))
+    app.run_polling()
